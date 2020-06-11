@@ -8,7 +8,7 @@ def make_html_header(map):
 
     html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
     html += '    <title>' + map + '</title>\n'
-    html += '    <link rel="stylesheet" src="maze.css" />\n'
+    html += '    <link rel="stylesheet" href="maze.css" />\n'
     html += '</head>\n<body>\n'
     html += '    <h1>' + map + '</h1>\n    <table>\n'
 

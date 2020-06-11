@@ -1,0 +1,33 @@
+html {
+    font-family: Arial;
+}
+
+body {
+    background-color: #222222;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+td {
+    width: 3vw;
+    height: 3vw;
+
+    text-align: center;
+
+    font-size: 0.5rem;
+    color: #331100;
+}
+
+td.n, td.s, td.e, td.w {
+    background-color: #663300;
+}
+
+td:hover {
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #000000
+}
+
