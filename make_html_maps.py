@@ -1,4 +1,7 @@
+from ast import literal_eval
+
 maps = ["test_line", "test_cross", "test_loop", "test_loop_fork", "main_maze"]
+# maps = ["test_line"]
 
 # create first part of HTML document
 def make_html_header(map):
@@ -21,10 +24,39 @@ def make_html_footer():
 for map in maps:
     map_file = "maps/" + map + ".txt"
 
-    with open("maps/" + map + ".html", "w") as html:
+    # evaluate contents of text file as a Python dictionary of rooms
+    room_graph = literal_eval(open(map_file, "r").read())
 
-        html.write(make_html_header(map))
-        html.write("test")
-        html.write(make_html_footer())
+    # determine dimensions of grid
+    largest_row = 0
+    largest_col = 0
+
+    for room_ID in room_graph:
+        room_data = room_graph[room_ID]
+
+        room_row = room_data[0][0]
+        room_col = room_data[0][1]
+
+        if room_row > largest_row:
+            largest_row = room_row
         
-        print("Created " + map + ".html")
+        if room_col > largest_col:
+            largest_col = room_col
+
+    print(map, largest_row, largest_col)
+
+    # create an array to hold the map
+    maze = [[]] * largest_row
+
+    for row in range(0, largest_col):
+        maze[row].append([] * largest_col)
+    
+    print(maze)
+
+    # with open("maps/" + map + ".html", "w") as html:
+
+    #     html.write(make_html_header(map))
+    #     html.write("test")
+    #     html.write(make_html_footer())
+        
+    #     print("Created " + map + ".html")
