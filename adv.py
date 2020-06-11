@@ -2,6 +2,8 @@ from room import Room
 from player import Player
 from world import World
 
+from traverse_maze import traverse_maze
+
 import random
 from ast import literal_eval
 
@@ -21,13 +23,13 @@ room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-world.print_rooms()
+# world.print_rooms()
 
 player = Player(world.starting_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
-traversal_path = []
+traversal_path = traverse_maze(player)
 
 
 
