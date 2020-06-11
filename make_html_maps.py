@@ -34,8 +34,7 @@ for map in maps:
     for room_ID in room_graph:
         room_data = room_graph[room_ID]
 
-        room_row = room_data[0][0]
-        room_col = room_data[0][1]
+        room_row, room_col = room_data[0]
 
         if room_row > largest_row:
             largest_row = room_row
@@ -46,11 +45,20 @@ for map in maps:
     print(map, largest_row, largest_col)
 
     # create an array to hold the map
-    maze = [[]] * largest_row
+    maze = []
+    row = [[]] * (largest_col + 1)
 
-    for row in range(0, largest_col):
-        maze[row].append([] * largest_col)
+    for _ in range(0, largest_row + 1):
+        maze.append(row)
     
+    # add all rooms to maze
+    for room_ID in room_graph:
+        room_data = room_graph[room_ID]
+
+        room_row, room_col = room_data[0]
+
+        # maze[room_row][room_col] = room_data
+
     print(maze)
 
     # with open("maps/" + map + ".html", "w") as html:
