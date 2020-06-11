@@ -35,7 +35,8 @@ for map in maps:
     for room_ID in room_graph:
         room_data = room_graph[room_ID]
 
-        room_row, room_col = room_data[0]
+        # tuple represents (x, y) coordinates
+        room_col, room_row = room_data[0]
 
         if room_row > largest_row:
             largest_row = room_row
@@ -56,7 +57,8 @@ for map in maps:
     for room_ID in room_graph:
         room_data = room_graph[room_ID]
 
-        room_row, room_col = room_data[0]
+        # tuple represents (x, y) coordinates
+        room_col, room_row = room_data[0]
 
         exits = []
 
@@ -75,16 +77,8 @@ for map in maps:
 
         html.write(make_html_header(map))
 
-        # add a header for column IDs
-        html.write('        <tr>\n            <td></td>\n')
-        
-        for col_ID in range(len(maze[0])):
-            html.write('            <th>' + str(col_ID) +'</th>\n')
-        
-        html.write('        </tr>\n')
-
         # add data for each room
-        for row_ID in range(len(maze)):
+        for row_ID in range(len(maze) - 1, -1, -1):
             
             row = maze[row_ID]
 
@@ -108,6 +102,14 @@ for map in maps:
                     html.write("            <td></td>\n")
 
             html.write('        </tr>\n')
+        
+        # add a bottom row for column IDs
+        html.write('        <tr>\n            <td></td>\n')
+        
+        for col_ID in range(len(maze[0])):
+            html.write('            <th>' + str(col_ID) +'</th>\n')
+        
+        html.write('        </tr>\n')
 
         html.write(make_html_footer())
         
