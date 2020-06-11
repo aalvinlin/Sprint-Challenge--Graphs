@@ -6,28 +6,57 @@ body {
     background-color: #222222;
 }
 
+h1 {
+    color: #CCCCCC;
+}
+
 table {
     margin: 0 auto;
     border-collapse: collapse;
 }
 
-td {
+td, th {
     width: 3vw;
     height: 3vw;
 
-    text-align: center;
+    text-align: center
+}
 
+td {
     font-size: 0.5rem;
     color: #331100;
 }
 
-td.n, td.s, td.e, td.w {
-    background-color: #663300;
+th {
+    font-size: 1rem;
+    color: #666666;
 }
 
-td:hover {
+td.room {
+    background-color: #AA9999;
+    border: 2px solid black; /* put walls around every room to begin with */
+}
+
+td.room:hover {
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #000000
+    background-color: #776666;
 }
 
+/* hide wall if there is an exit in the specified direction */
+
+td.n {
+    border-top: 2px solid transparent;
+}
+
+td.s {
+    border-bottom: 2px solid transparent;
+}
+
+td.e {
+    border-right: 2px solid transparent;
+}
+
+td.w {
+    border-left: 2px solid transparent;
+}

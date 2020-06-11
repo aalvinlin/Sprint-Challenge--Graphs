@@ -79,7 +79,7 @@ for map in maps:
         html.write('        <tr>\n            <td></td>\n')
         
         for col_ID in range(len(maze[0])):
-            html.write('            <td>' + str(col_ID) +'</td>\n')
+            html.write('            <th>' + str(col_ID) +'</th>\n')
         
         html.write('        </tr>\n')
 
@@ -88,7 +88,7 @@ for map in maps:
             
             row = maze[row_ID]
 
-            html.write('        <tr>\n            <td>' + str(row_ID) +'</td>\n')
+            html.write('        <tr>\n            <th>' + str(row_ID) +'</th>\n')
 
             for col_ID in range(len(maze[0])):
 
@@ -100,7 +100,7 @@ for map in maps:
                     room_ID = room_data["id"]
                     exits = " ".join(room_data["exits"])
 
-                    html.write('            <td class="' + exits + '">')
+                    html.write('            <td class="room ' + exits + '">')
                     html.write(str(room_ID))
                     html.write("</td>\n")
 
