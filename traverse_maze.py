@@ -227,8 +227,14 @@ def traverse_maze(player):
 
     # refine solution now that all rooms have been traversed and had their data recorded
 
-    # store the cost to explore each dead-end route
+    # store each room that has a branch into a dead end
+    # value will be a list of lists representing paths to traverse each dead end entirely, beginning with the square after the square in the key
     dead_ends = dict()
+
+    # store the reverse relationship: dead end rooms to start rooms
+    # key will be any room that belongs to a dead end
+    # value will be the starting room that each room in a dead end belongs to
+    dead_end_start_rooms = dict()
 
     # find rooms with only a single neighbor (end of a dead-end passage)
     for room in visited_rooms:
@@ -247,7 +253,6 @@ def traverse_maze(player):
         path_from_dead_end = []
 
         # keep track of rooms in this dead end
-
         while len(actual_neighbors) == 1:
             # print(prev_room, "has only one neighbor,", actual_neighbors)
 
@@ -268,6 +273,13 @@ def traverse_maze(player):
                     actual_neighbors.append(neighbor)
             
             path_from_dead_end.append(prev_room)
+
+        # associate each room in the dead end with the start of the dead end
+        # this will be used later to consolidate multiple dead end passages
+        # "room" is the room right before the dead end
+
+        for dead_end_room in path_from_dead_end:
+            dead_end_start_rooms[dead_end_room] = room
 
         # store the sequence of rooms needed to traverse the dead end
         if len(path_from_dead_end) > 0:
@@ -296,5 +308,8 @@ def traverse_maze(player):
         if len(passages) > 1:
 
             print(starting_room, dead_ends[starting_room])
+
+    print(len(dead_end_start_rooms), "rooms belong to a dead end passage.")
+    print(dead_end_start_rooms)
 
     return (traversal_path, traversal_directions)
