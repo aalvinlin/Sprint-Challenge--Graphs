@@ -26,6 +26,13 @@ class Stack():
 
 def traverse_maze(player):
     
+    # use a dictionary to look up opposite directions (used for backtracking)
+    opposite_directions = dict()
+    opposite_directions["n"] = "s"
+    opposite_directions["s"] = "n"
+    opposite_directions["e"] = "w"
+    opposite_directions["w"] = "e"
+
     # use a list of tuples to keep track of directions travelled and the room number at each step
     traversal_path = []
 
@@ -42,8 +49,7 @@ def traverse_maze(player):
 
     while rooms_to_visit.size() > 0:
 
-        # visit current room and update previous room
-        previous_room = new_room
+        # visit current room
         new_room_data = rooms_to_visit.pop()
         direction_to_new_room, new_room = new_room_data
 
@@ -55,6 +61,8 @@ def traverse_maze(player):
                 current_room_data = traversal_path[-1]
                 current_room = current_room_data[1]
 
+                # print("the current room is", current_room.id)
+
                 # get exits from current room to see if the new room is one room away
                 exit_directions_from_current_room = current_room.get_exits()
                 adjoining_rooms = [current_room.get_room_in_direction(direction) for direction in exit_directions_from_current_room]
@@ -65,6 +73,16 @@ def traverse_maze(player):
 
                 # keep track of rooms backtracked from
                 rooms_backtracked_through = []
+
+                # set the previous room's direction to the current room' direction in preparation for potential backtracking
+                previous_room_data = traversal_path[-1]
+                # previous_room_direction = previous_room_data[0]
+
+                # # compute the opposite direction (if it is not None for the first room)
+                # if previous_room_direction is not None:
+                #     opposite_of_previous_room_direction = opposite_directions[previous_room_direction]
+
+                #     print("to leave the previous room, you would need to go", opposite_of_previous_room_direction)
 
                 while new_room.id not in adjoining_room_IDs:
                     
@@ -78,8 +96,14 @@ def traverse_maze(player):
                     adjoining_room_IDs = [room.id for room in adjoining_rooms]
 
                     # add room to list of rooms backtracked through
-                    rooms_backtracked_through.append((None, current_room))
+                    # use the opposite direction of what was used to enter the previous room
+                    previous_room_direction = previous_room_data[0]
+                    rooms_backtracked_through.append((opposite_directions[previous_room_direction], current_room))
 
+                    # update previous room info to that of the current room
+                    previous_room_data = current_room_data
+
+                    # update index to point to the room before the current one
                     index_of_nth_from_last_room_in_traversal_path -= 1
 
                 # add the sequences of moves used for backtracking to the end of traversal_path
@@ -102,8 +126,7 @@ def traverse_maze(player):
                 rooms_to_visit.push((exit_direction, new_room.get_room_in_direction(exit_direction)))
 
     # return just the directions for traversal_path
-    traversal_path_directions = [room[0] for room in traversal_path]
+    # remove the first placeholder direction used to get to the starting room
+    traversal_path_directions = [room[0] for room in traversal_path if room[0] is not None]
 
-    print(traversal_path_directions)
-
-    return traversal_path
+    return traversal_path_directions
