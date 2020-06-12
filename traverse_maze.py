@@ -225,4 +225,54 @@ def traverse_maze(player):
     print(traversal_directions)
     print("done")
 
+    # refine solution now that all rooms have been traversed and had their data recorded
+
+    # store the cost to explore each dead-end route
+    passage_costs = dict()
+
+    # find rooms with only a single neighbor (end of a dead-end passage)
+    for room in visited_rooms:
+
+        # count the neighbors in this room
+        neighbor_data = maze.get_neighbors(room)
+        actual_neighbors = []
+
+        for direction in neighbor_data:
+            neighbor = neighbor_data[direction]
+
+            # skip neighbors that do not exist
+            if neighbor is not None:
+                actual_neighbors.append(neighbor)
+        
+        # start counter for rooms in this passage
+        rooms_in_dead_end = 0
+
+        while len(actual_neighbors) == 1:
+            # print(prev_room, "has only one neighbor,", actual_neighbors)
+
+            prev_room = room
+            # set the current room to the only exit out of this room
+            # (or only other exit out of this room)
+            room = actual_neighbors[0]
+
+            # count the neighbors in this room
+            neighbor_data = maze.get_neighbors(room)
+            actual_neighbors = []
+
+            for direction in neighbor_data:
+                neighbor = neighbor_data[direction]
+
+                # skip neighbors that do not exist
+                if neighbor is not None and neighbor != prev_room:
+                    actual_neighbors.append(neighbor)
+            
+            rooms_in_dead_end += 1
+
+        # store number of rooms in dead end
+        if rooms_in_dead_end > 0:
+            # print("ended up at room", prev_room, "with", rooms_in_dead_end)
+            passage_costs[prev_room] = rooms_in_dead_end
+        
+    print("Passage costs:", passage_costs)
+
     return (traversal_path, traversal_directions)
