@@ -208,8 +208,28 @@ def traverse_maze(player):
             # update previous room
             previous_room = new_room
     
+    # convert traversal_path to a sequence of directions
+    traversal_directions = []
+
+    for i in range(0, len(traversal_path) - 1):
+
+        previous_room = traversal_path[i]
+        current_room = traversal_path[i + 1]
+
+        # print(previous_room, "=>", current_room)
+
+        neighbor_data = maze.get_neighbors(previous_room)
+
+        for direction in neighbor_data:
+
+            if neighbor_data[direction] == current_room:
+                traversal_directions.append(direction)
+        
     print(traversal_path)
+    print(traversal_directions)
     print("done")
+
+    return (traversal_path, traversal_directions)
 
     # for room_ID in visited_rooms:
 
@@ -294,4 +314,4 @@ def traverse_maze(player):
             for exit_direction in exit_directions_from_room:
                 rooms_to_visit.push((exit_direction, new_room.get_room_in_direction(exit_direction)))
     '''
-    return traversal_path
+    # return traversal_path

@@ -27,12 +27,10 @@ world.load_graph(room_graph)
 
 player = Player(world.starting_room)
 
-# Fill this out with directions to walk
-traversal_path_data = traverse_maze(player)
-
-# return just the directions for traversal_path
-# remove the first placeholder direction used to get to the starting room
-traversal_path = [room[0] for room in traversal_path_data if room[0] is not None]
+# Traverse the maze and obtain:
+# - a list of rooms visited
+# - a list of directions used to travel the rooms
+traversal_path, traversal_directions = traverse_maze(player)
 
 # get map name from map file
 parts_without_txt = map_file.split(".")
@@ -41,12 +39,20 @@ map_name = parts_without_slash[1]
 
 with open("traversals/" + map_name + "_traversal.txt", "w") as traversal_record:
     
-    for room in traversal_path_data:
+    for i in range(len(traversal_path)):
 
-        direction = room[0] or "None"
-        room_ID = room[1].id
+        room = str(traversal_path[i])
 
-        traversal_record.write(direction + " " + str(room_ID) + "\n")
+        # there is no direction specified for the last room, so add a "None" to text file
+        if i < len(traversal_directions):
+            direction_to_leave_room = traversal_directions[i]
+        else:
+            direction_to_leave_room = "None"
+
+        traversal_record.write(room + " " + direction_to_leave_room + "\n")
+
+# rename traversal_directions to traversal_path for the tests to run correctly
+traversal_path = traversal_directions
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
