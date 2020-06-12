@@ -120,9 +120,13 @@ def traverse_maze(player):
             visited_rooms.add(new_room.id)
 
             # add movement to traversal path
+            traversal_path.append((direction_to_new_room, new_room.id))
 
-            print("previous room was", previous_room.id)
-            print("current room is", new_room.id, "\n")
+            print("path so far:")
+            print("  ", traversal_path)
+
+            # print("previous room was", previous_room.id)
+            # print("current room is", new_room.id, "\n")
 
             steps += 1
 
