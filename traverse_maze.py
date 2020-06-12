@@ -35,23 +35,23 @@ class Graph:
         if vertex_id not in self.vertices:
 
             self.vertices[vertex_id] = dict()
-            self.vertices[vertex_id]["n"] = "?"
-            self.vertices[vertex_id]["s"] = "?"
-            self.vertices[vertex_id]["e"] = "?"
-            self.vertices[vertex_id]["w"] = "?"
+            self.vertices[vertex_id]["n"] = None
+            self.vertices[vertex_id]["s"] = None
+            self.vertices[vertex_id]["e"] = None
+            self.vertices[vertex_id]["w"] = None
 
-    def add_edge(self, v1, v2, direction):
+    def add_edge(self, vertex1_id, vertex2_id, direction):
 
         # add v2 if it doesn't exist yet
-        if v2 not in self.vertices:
-            self.add_vertex(v2)
+        if vertex2_id not in self.vertices:
+            self.add_vertex(vertex2_id)
 
-        # create an edge going from v1 to v2
-        self.vertices[v1][direction] = v2
+            # create an edge going from vertex1_id to vertex2_id
+            self.vertices[vertex1_id][direction] = vertex2_id
 
-        # store the edge going from v2 to v1 using the opposite direction
-        reverse_direction = opposite_directions[direction]
-        self.vertices[v2][reverse_direction] = v1
+            # store the edge going from vertex2_id to vertex1_id using the opposite direction
+            reverse_direction = opposite_directions[direction]
+            self.vertices[vertex2_id][reverse_direction] = vertex1_id
 
     def get_neighbors(self, vertex_id):
         return self.vertices[vertex_id]
@@ -72,21 +72,48 @@ def traverse_maze(player):
     traversal_path = []
 
     # keep track of rooms already visited
-    visited_rooms = set()
+    # each entry in rooms_to_visit will be a Room object
+    visited_rooms = dict()
     rooms_to_visit = Stack()
 
     # add current room to rooms to visit
     new_room = player.current_room
-    rooms_to_visit.push((None, new_room))
-
-    # keep track of previous room for backtracking
-    previous_room = None
+    rooms_to_visit.push(new_room)
 
     while rooms_to_visit.size() > 0:
 
         # visit current room
-        new_room_data = rooms_to_visit.pop()
-        direction_to_new_room, new_room = new_room_data
+        current_room = rooms_to_visit.pop()
+
+        if current_room.id not in visited_rooms:
+
+            # add room to dictionary
+            visited_rooms[current_room.id] = current_room
+
+            # add room to graph
+            maze.add_vertex(new_room.id)
+
+            # get any neighbors to the room to add them to the graph
+            for exit_direction in current_room.get_exits():
+
+                # get neighboring room
+                adjoining_room = current_room.get_room_in_direction(exit_direction)
+
+                # add a vertex from the current room to the neighboring room
+                maze.add_edge(current_room.id, adjoining_room.id, exit_direction)
+                
+                # push all neighbors onto the stack to visit later
+                rooms_to_visit.push(adjoining_room)
+
+                # print(current_room.id, adjoining_room.id, exit_direction)
+    
+    print("done")
+
+    for room_ID in visited_rooms:
+
+        print(room_ID, maze.get_neighbors(room_ID))
+
+    '''
 
         if new_room.id not in visited_rooms:
 
@@ -164,5 +191,5 @@ def traverse_maze(player):
             # add each tuple to rooms_to_visit
             for exit_direction in exit_directions_from_room:
                 rooms_to_visit.push((exit_direction, new_room.get_room_in_direction(exit_direction)))
-
+    '''
     return traversal_path
