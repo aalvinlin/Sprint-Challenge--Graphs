@@ -68,7 +68,8 @@ def traverse_maze(player):
     # use a graph to store visited rooms and their neighbors
     maze = Graph()
 
-    # use a list of tuples to keep track of directions travelled and the room number at each step
+    # keep track of room numbers at each step
+    # this will later be converted to a sequence of movements
     traversal_path = []
 
     # keep track of rooms already visited
@@ -80,38 +81,80 @@ def traverse_maze(player):
     new_room = player.current_room
     rooms_to_visit.push(new_room)
 
+    # keep track of previous room in order to know when to backtrack
+    previous_room = None
+
     while rooms_to_visit.size() > 0:
 
-        # visit current room
-        current_room = rooms_to_visit.pop()
+        # visit next room in stack
+        new_room = rooms_to_visit.pop()
 
-        if current_room.id not in visited_rooms:
+        # visit room only if this room has not been visited before
+        if new_room.id not in visited_rooms:
+
+            # check to see if the new room is directly accessible from the previous room
+            # only do so if this is not the starting room
+            if previous_room is not None:
+
+                is_valid_direct_connection = False
+                exit_to_use = None
+
+                # examine all exits from the previous room for one that will lead to the new room
+                for exit_direction in previous_room.get_exits():
+
+                    adjoining_room = previous_room.get_room_in_direction(exit_direction)
+
+                    if adjoining_room.id == new_room.id:
+                        is_valid_direct_connection = True
+                        exit_to_use = exit_direction
+                
+                # the new room is not directly reachable; need to search for a path to the target room
+                if not is_valid_direct_connection:
+
+                    print(new_room.id, "can't be reached from", previous_room.id)
+
+                    # use breadth-first search to find a route
+
+                    # add that route to traversal_path
+
+                    # then resume adding new_room data
+
+
+                    # ... need to add new_room to the graph first? Or already in there?
+                        
 
             # add room to dictionary
-            visited_rooms[current_room.id] = current_room
+            visited_rooms[new_room.id] = new_room
 
             # add room to graph
             maze.add_vertex(new_room.id)
 
+            # add room to traversal path
+            traversal_path.append(new_room.id)
+
             # get any neighbors to the room to add them to the graph
-            for exit_direction in current_room.get_exits():
+            for exit_direction in new_room.get_exits():
 
                 # get neighboring room
-                adjoining_room = current_room.get_room_in_direction(exit_direction)
+                adjoining_room = new_room.get_room_in_direction(exit_direction)
 
                 # add a vertex from the current room to the neighboring room
-                maze.add_edge(current_room.id, adjoining_room.id, exit_direction)
+                maze.add_edge(new_room.id, adjoining_room.id, exit_direction)
                 
                 # push all neighbors onto the stack to visit later
                 rooms_to_visit.push(adjoining_room)
 
-                # print(current_room.id, adjoining_room.id, exit_direction)
+                # print(new_room.id, adjoining_room.id, exit_direction)
+            
+            # update previous room
+            previous_room = new_room
     
+    print(traversal_path)
     print("done")
 
-    for room_ID in visited_rooms:
+    # for room_ID in visited_rooms:
 
-        print(room_ID, maze.get_neighbors(room_ID))
+    #     print(room_ID, maze.get_neighbors(room_ID))
 
     '''
 
