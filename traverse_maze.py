@@ -101,4 +101,9 @@ def traverse_maze(player):
             for exit_direction in exit_directions_from_room:
                 rooms_to_visit.push((exit_direction, new_room.get_room_in_direction(exit_direction)))
 
+    # return just the directions for traversal_path
+    traversal_path_directions = [room[0] for room in traversal_path]
+
+    print(traversal_path_directions)
+
     return traversal_path
