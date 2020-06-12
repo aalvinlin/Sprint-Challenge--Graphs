@@ -46,13 +46,13 @@ class Graph:
         if vertex2_id not in self.vertices:
             self.add_vertex(vertex2_id)
 
-            # create an edge going from vertex1_id to vertex2_id
-            self.vertices[vertex1_id][direction] = vertex2_id
+        # create an edge going from vertex1_id to vertex2_id
+        self.vertices[vertex1_id][direction] = vertex2_id
 
-            # store the edge going from vertex2_id to vertex1_id using the opposite direction
-            reverse_direction = opposite_directions[direction]
-            self.vertices[vertex2_id][reverse_direction] = vertex1_id
-
+        # store the edge going from vertex2_id to vertex1_id using the opposite direction
+        reverse_direction = opposite_directions[direction]
+        self.vertices[vertex2_id][reverse_direction] = vertex1_id
+        
     def get_neighbors(self, vertex_id):
         return self.vertices[vertex_id]
 
@@ -203,8 +203,6 @@ def traverse_maze(player):
                 # push all neighbors onto the stack to visit later
                 rooms_to_visit.push(adjoining_room)
 
-                # print(new_room.id, adjoining_room.id, exit_direction)
-            
             # update previous room
             previous_room = new_room
     
@@ -215,8 +213,6 @@ def traverse_maze(player):
 
         previous_room = traversal_path[i]
         current_room = traversal_path[i + 1]
-
-        # print(previous_room, "=>", current_room)
 
         neighbor_data = maze.get_neighbors(previous_room)
 
