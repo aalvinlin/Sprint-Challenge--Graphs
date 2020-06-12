@@ -57,7 +57,8 @@ class Graph:
         return self.vertices[vertex_id]
 
     # use breadth-first search to return a list of nodes to traverse to travel between two vertices
-    def find_path_from(self, starting_vertex, destination_vertex):
+    # starting_vertex and destination_vertex are purposely left out of the list
+    def find_shortest_sequence_of_nodes_between(self, starting_vertex, destination_vertex):
 
         # create a queue to hold vertices to traverse
         vertices_to_visit = Queue()
@@ -102,7 +103,7 @@ class Graph:
                             final_path = paths_to_vertices[current_vertex][:]
                             final_path.append(current_vertex)
                             final_path.append(neighbor)
-                            return final_path
+                            return final_path[1:-1]
 
                         # add all the other neighbors to the queue
                         vertices_to_visit.enqueue(neighbor)
@@ -175,19 +176,11 @@ def traverse_maze(player):
                 # the new room is not directly reachable; need to search for a path to the target room
                 if not is_valid_direct_connection:
 
-                    print(new_room.id, "can't be reached from", previous_room.id)
-
-                    # use breadth-first search to find a route
-                    # print("  ", maze.get_neighbors(new_room.id), maze.get_neighbors(previous_room.id), )
-                    print(maze.find_path_from(previous_room.id, new_room.id))
-
+                    # use breadth-first search to find a route (which may involve backtracking if at a dead end, or moving forward at the end of a loop)
+                    path_between_rooms = maze.find_shortest_sequence_of_nodes_between(previous_room.id, new_room.id)
+                    
                     # add that route to traversal_path
-
-                    # then resume adding new_room data
-
-
-                    # ... need to add new_room to the graph first? Or already in there?
-                        
+                    traversal_path = traversal_path + path_between_rooms                      
 
             # add room to dictionary
             visited_rooms[new_room.id] = new_room
