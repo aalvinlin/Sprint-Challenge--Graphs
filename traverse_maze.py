@@ -276,8 +276,25 @@ def traverse_maze(player):
             path_to_dead_end = path_from_dead_end[1:]
             path_to_dead_end.reverse()
             
-            dead_ends[prev_room] = path_to_dead_end + path_from_dead_end
+            # store in the dictionary with the key as the room that forks (that leads to the dead end)
+            # there is a possibility that a room will fork to multiple dead ends. Resolve this later.
+            if room in dead_ends:
+                dead_ends[room].append(path_to_dead_end + path_from_dead_end)
+            else:
+                dead_ends[room] = [path_to_dead_end + path_from_dead_end]
         
-    print("Passage costs:", dead_ends)
+    # print("Total dead ends:", len(dead_ends))
+    # for starting_room in dead_ends:
+    #     print(starting_room, dead_ends[starting_room])
+
+    # consolidate dead ends that branch off of other dead ends
+    for starting_room in dead_ends:
+
+        passages = dead_ends[starting_room]
+
+        # only dead ends longer than a single room can branch
+        if len(passages) > 1:
+
+            print(starting_room, dead_ends[starting_room])
 
     return (traversal_path, traversal_directions)
