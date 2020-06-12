@@ -30,14 +30,17 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
-        self.vertices[vertex_id] = set()
+        self.vertices[vertex_id] = dict()
+        self.vertices[vertex_id]["n"] = "?"
+        self.vertices[vertex_id]["s"] = "?"
+        self.vertices[vertex_id]["e"] = "?"
+        self.vertices[vertex_id]["w"] = "?"
 
-    def add_edge(self, v1, v2):
-        self.vertices[v1].add(v2)
+    def add_edge(self, v1, v2, direction):
+        self.vertices[v1][direction] = v2
 
     def get_neighbors(self, vertex_id):
         return self.vertices[vertex_id]
-
 
 def traverse_maze(player):
     
