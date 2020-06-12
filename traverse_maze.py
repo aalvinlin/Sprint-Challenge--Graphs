@@ -24,8 +24,26 @@ class Stack():
     def size(self):
         return len(self.stack)
 
+class Graph:
+
+    def __init__(self):
+        self.vertices = {}
+
+    def add_vertex(self, vertex_id):
+        self.vertices[vertex_id] = set()
+
+    def add_edge(self, v1, v2):
+        self.vertices[v1].add(v2)
+
+    def get_neighbors(self, vertex_id):
+        return self.vertices[vertex_id]
+
+
 def traverse_maze(player):
     
+    # use a graph to store visited rooms and their neighbors
+    maze = Graph()
+
     # use a dictionary to look up opposite directions (used for backtracking)
     opposite_directions = dict()
     opposite_directions["n"] = "s"
