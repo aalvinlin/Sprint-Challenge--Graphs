@@ -60,10 +60,30 @@ def traverse_maze(player):
                 adjoining_rooms = [current_room.get_room_in_direction(direction) for direction in exit_directions_from_current_room]
                 adjoining_room_IDs = [room.id for room in adjoining_rooms]
 
-                if new_room.id in adjoining_room_IDs:
-                    print("new room", new_room.id, "is accessible from", current_room.id, ".")
-                else:
-                    print("need to teleport to get here.")
+                # if the new room is not directly accessible, need to backtrack to get there
+                index_of_nth_from_last_room_in_traversal_path = -2
+
+                # keep track of rooms backtracked from
+                rooms_backtracked_through = []
+
+                while new_room.id not in adjoining_room_IDs:
+                    
+                    # get next most recent room from traversal_path
+                    current_room_data = traversal_path[index_of_nth_from_last_room_in_traversal_path]
+                    current_room = current_room_data[1]
+
+                    # get neighbors from this room
+                    exit_directions_from_current_room = current_room.get_exits()
+                    adjoining_rooms = [current_room.get_room_in_direction(direction) for direction in exit_directions_from_current_room]
+                    adjoining_room_IDs = [room.id for room in adjoining_rooms]
+
+                    # add room to list of rooms backtracked through
+                    rooms_backtracked_through.append((None, current_room))
+
+                    index_of_nth_from_last_room_in_traversal_path -= 1
+
+                # add the sequences of moves used for backtracking to the end of traversal_path
+                traversal_path.extend(rooms_backtracked_through)
 
             # add room to set containing already-visited rooms
             visited_rooms.add(new_room.id)
