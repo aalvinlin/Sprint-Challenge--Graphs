@@ -15,8 +15,8 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+map_file = "maps/test_loop_fork.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -28,10 +28,25 @@ world.load_graph(room_graph)
 player = Player(world.starting_room)
 
 # Fill this out with directions to walk
-# traversal_path = ['n', 'rn']
-traversal_path = traverse_maze(player)
+traversal_path_data = traverse_maze(player)
 
+# return just the directions for traversal_path
+# remove the first placeholder direction used to get to the starting room
+traversal_path = [room[0] for room in traversal_path_data if room[0] is not None]
 
+# get map name from map file
+parts_without_txt = map_file.split(".")
+parts_without_slash = parts_without_txt[0].split("/")
+map_name = parts_without_slash[1]
+
+with open("traversals/" + map_name + "_traversal.txt", "w") as traversal_record:
+    
+    for room in traversal_path_data:
+
+        direction = room[0] or "None"
+        room_ID = room[1].id
+
+        traversal_record.write(direction + " " + str(room_ID) + "\n")
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()

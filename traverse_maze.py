@@ -84,6 +84,8 @@ def traverse_maze(player):
 
                 #     print("to leave the previous room, you would need to go", opposite_of_previous_room_direction)
 
+                # print("Is", new_room.id, "accesible from", current_room.id, "?", new_room.id in adjoining_room_IDs)
+
                 while new_room.id not in adjoining_room_IDs:
                     
                     # get next most recent room from traversal_path
@@ -125,8 +127,4 @@ def traverse_maze(player):
             for exit_direction in exit_directions_from_room:
                 rooms_to_visit.push((exit_direction, new_room.get_room_in_direction(exit_direction)))
 
-    # return just the directions for traversal_path
-    # remove the first placeholder direction used to get to the starting room
-    traversal_path_directions = [room[0] for room in traversal_path if room[0] is not None]
-
-    return traversal_path_directions
+    return traversal_path
