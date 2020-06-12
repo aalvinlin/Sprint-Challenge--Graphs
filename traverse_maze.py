@@ -105,25 +105,40 @@ def traverse_maze(player):
         new_room_data = rooms_to_visit.pop()
         direction_to_new_room, new_room = new_room_data
 
-        print("🛑new room!", new_room.id)
+        # print("🛑new room!", new_room.id)
 
         # print("data contains", new_room_data, new_room_data[0])
         # direction_to_new_room, new_room_ID
 
         if new_room.id not in visited_rooms:
 
-            # print("new room is", new_room.id)
+            print("new room is", new_room.id)
             # print("  visited:", visited_rooms)
             # print("  rooms_to_visit:", rooms_to_visit.queue)
+
+            # check if new room is reachable from the current room
+            # check only if this is not the starting room
+            if len(traversal_path) > 0:
+                current_room_data = traversal_path[-1]
+                current_room = current_room_data[1]
+
+                exit_directions_from_current_room = current_room.get_exits()
+                adjoining_rooms = [current_room.get_room_in_direction(direction) for direction in exit_directions_from_current_room]
+                adjoining_room_IDs = [room.id for room in adjoining_rooms]
+
+                if new_room.id in adjoining_room_IDs:
+                    print("new room", new_room.id, "is accessible from", current_room.id, ".")
+                else:
+                    print("need to teleport to get here.")
 
             # add room to set containing already-visited rooms
             visited_rooms.add(new_room.id)
 
             # add movement to traversal path
-            traversal_path.append((direction_to_new_room, new_room.id))
+            traversal_path.append((direction_to_new_room, new_room))
 
-            print("path so far:")
-            print("  ", traversal_path)
+            # print("path so far:")
+            # print("  ", traversal_path)
 
             # print("previous room was", previous_room.id)
             # print("current room is", new_room.id, "\n")
@@ -153,7 +168,7 @@ def traverse_maze(player):
 
                 # if adjoining_room not in visited_rooms:
                 rooms_to_visit.push(adjoining_room_info)
-                print("added", adjoining_room_ID, "to the queue")
+                # print("added", adjoining_room_ID, "to the queue")
 
             # print(len(visited_rooms), "rooms left")
 
