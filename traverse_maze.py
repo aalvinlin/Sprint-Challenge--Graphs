@@ -30,29 +30,43 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
-        self.vertices[vertex_id] = dict()
-        self.vertices[vertex_id]["n"] = "?"
-        self.vertices[vertex_id]["s"] = "?"
-        self.vertices[vertex_id]["e"] = "?"
-        self.vertices[vertex_id]["w"] = "?"
+
+        # create a new entry only if it doesn't exist yet
+        if vertex_id not in self.vertices:
+
+            self.vertices[vertex_id] = dict()
+            self.vertices[vertex_id]["n"] = "?"
+            self.vertices[vertex_id]["s"] = "?"
+            self.vertices[vertex_id]["e"] = "?"
+            self.vertices[vertex_id]["w"] = "?"
 
     def add_edge(self, v1, v2, direction):
+
+        # add v2 if it doesn't exist yet
+        if v2 not in self.vertices:
+            self.add_vertex(v2)
+
+        # create an edge going from v1 to v2
         self.vertices[v1][direction] = v2
+
+        # store the edge going from v2 to v1 using the opposite direction
+        reverse_direction = opposite_directions[direction]
+        self.vertices[v2][reverse_direction] = v1
 
     def get_neighbors(self, vertex_id):
         return self.vertices[vertex_id]
+
+# use a dictionary to look up opposite directions (used for backtracking)
+opposite_directions = dict()
+opposite_directions["n"] = "s"
+opposite_directions["s"] = "n"
+opposite_directions["e"] = "w"
+opposite_directions["w"] = "e"
 
 def traverse_maze(player):
     
     # use a graph to store visited rooms and their neighbors
     maze = Graph()
-
-    # use a dictionary to look up opposite directions (used for backtracking)
-    opposite_directions = dict()
-    opposite_directions["n"] = "s"
-    opposite_directions["s"] = "n"
-    opposite_directions["e"] = "w"
-    opposite_directions["w"] = "e"
 
     # use a list of tuples to keep track of directions travelled and the room number at each step
     traversal_path = []
@@ -75,6 +89,9 @@ def traverse_maze(player):
         direction_to_new_room, new_room = new_room_data
 
         if new_room.id not in visited_rooms:
+
+            # add room to graph
+            maze.add_vertex(new_room.id)
 
             # check if new room is reachable from the current room
             # check only if this is not the starting room
